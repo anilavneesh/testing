@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Testing : testing tagline" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Testing</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/anilavneesh/testing">View on GitHub</a>
+
+          <h1 id="project_title">Testing</h1>
+          <h2 id="project_tagline">testing tagline</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/anilavneesh/testing/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/anilavneesh/testing/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Xml;</p>
+
+<p>public partial class <em>Default : System.Web.UI.Page 
+{
+    private oAuthLinkedIn _oauth = new oAuthLinkedIn();
+    protected void Page</em>Load(object sender, EventArgs e)
+    {
+        string status = Request.QueryString["Status"];
+        if(status != null)
+        {
+            Session["status"] = status;
+        }
+        if (Session["status"] != null)
+        {
+        txtStatus.Text = Session["status"].ToString();
+        }
+        string oauth_token = Request.QueryString["oauth_token"];
+        string oauth_verifier = Request.QueryString["oauth_verifier"];
+        if (oauth_token != null &amp;&amp; oauth_verifier != null)</p>
+
+<pre><code>    {
+        txtRequestToken.Text = Application["reuqestToken"].ToString();
+        txtTokenSecret.Text = Application["reuqestTokenSecret"].ToString();
+        hypAuthToken.NavigateUrl = Application["oauthLink"].ToString();
+        hypAuthToken.Text = Application["oauthLink"].ToString();
+
+        Application["oauth_token"] = oauth_token;
+        Application["oauth_verifier"] = oauth_verifier;
+
+        txtoAuth_token.Text = oauth_token;
+        txtoAuth_verifier.Text = oauth_verifier;
+        if (!IsPostBack)
+        {
+            btnGetAccessToken_Click();
+
+        }
+    }
+    else
+    {
+        btnCreateAuthorization_Click();
+
+    }
+}
+
+protected void btnCreateAuthorization_Click()
+{
+    string authLink = _oauth.AuthorizationLinkGet();
+    Application["reuqestToken"] = _oauth.Token;
+    Application["reuqestTokenSecret"] = _oauth.TokenSecret;
+    Application["oauthLink"] = authLink;
+    txtRequestToken.Text = _oauth.Token;
+    txtTokenSecret.Text = _oauth.TokenSecret;
+    hypAuthToken.NavigateUrl = authLink;
+    hypAuthToken.Text = authLink;
+    Response.Redirect(authLink);
+
+}
+
+protected void btnGetAccessToken_Click()
+{
+    _oauth.Token = txtoAuth_token.Text;
+    _oauth.TokenSecret = txtTokenSecret.Text;
+    _oauth.Verifier = txtoAuth_verifier.Text;
+
+    _oauth.AccessTokenGet(txtoAuth_token.Text);
+    txtAccessToken.Text = _oauth.Token;
+    txtAccessTokenSecret.Text = _oauth.TokenSecret;
+    btnGetAccessToken.Focus();
+}
+
+protected void btnSendStatusUpdate_Click(object sender, EventArgs e)
+{
+    _oauth.Token = txtAccessToken.Text;
+    _oauth.TokenSecret = txtAccessTokenSecret.Text;
+    _oauth.Verifier = txtoAuth_verifier.Text;
+
+        string xml = "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;";
+        xml += "&lt;current-status&gt;"+txtStatus.Text+"&lt;/current-status&gt;";
+
+         string response = _oauth.APIWebRequest("PUT", "http://api.linkedin.com/v1/people/~/current-status", xml);
+         if (response == "")
+             lblResponse.Text = "Your new status updated";
+         btnSendStatusUpdate.Focus();
+         Page.ClientScript.RegisterStartupScript(this.GetType(), "myCloseScript", "window.close()", true); 
+}
+
+
+protected void btnRequestProfile_Click(object sender, EventArgs e)
+{
+    _oauth.Token = txtAccessToken.Text;
+    _oauth.TokenSecret = txtAccessTokenSecret.Text;
+    _oauth.Verifier = txtoAuth_verifier.Text;
+
+    string response = _oauth.APIWebRequest("GET", "https://api.linkedin.com/v1/people/~", null);
+    lblResponse.Text = response;
+    btnRequestProfile.Focus();
+}
+</code></pre>
+
+<p>}</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Testing maintained by <a href="https://github.com/anilavneesh">anilavneesh</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
